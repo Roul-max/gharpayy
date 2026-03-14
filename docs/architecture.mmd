@@ -1,0 +1,21 @@
+flowchart TD
+  U1[Marketplace User] --> M1[Marketplace UI]
+  U2[CRM User] --> C1[CRM UI]
+  U3[Owner] --> O1[Owner Portal UI]
+
+  M1 --> API[Express API Layer]
+  C1 --> API
+  O1 --> API
+
+  API --> AUTH[Supabase Auth]
+  API --> DB[(Supabase PostgreSQL)]
+  API --> AI[Gemini Assistant]
+
+  DB --> T1[Leads]
+  DB --> T2[Visits]
+  DB --> T3[Bookings]
+  DB --> T4[Properties/Rooms/Beds]
+  DB --> T5[Notifications/Followups]
+
+  API --> JOBS[Automation Jobs]
+  JOBS --> DB
