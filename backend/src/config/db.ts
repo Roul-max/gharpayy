@@ -1,4 +1,4 @@
-import { Pool, type PoolClient, type QueryResult } from 'pg';
+import { Pool, type PoolClient, type QueryResult, type QueryResultRow } from 'pg';
 import { withSpan } from '../observability/tracing.js';
 import { observeSlowQuery } from '../observability/metrics.js';
 import { logger } from '../observability/logger.js';
@@ -21,7 +21,7 @@ export function hasDatabasePool() {
   return pool !== null;
 }
 
-export async function queryWithTrace<T = any>(
+export async function queryWithTrace<T extends QueryResultRow = any>(
   text: string,
   values: unknown[] = [],
   queryName = 'db.query',
