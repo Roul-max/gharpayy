@@ -1,5 +1,5 @@
 import { QueueEvents, Worker } from 'bullmq';
-import { hasRedis, redis } from '../cache/redis.js';
+import { hasRedis, redisConnectionOptions } from '../cache/redis.js';
 import { runFollowUpReminderJob } from '../jobs/followUpReminderJob.js';
 import { runInventoryHealthJob } from '../jobs/inventoryHealthJob.js';
 import { runLeadScoreRecalculationJob } from '../jobs/leadScoreRecalculationJob.js';
@@ -23,7 +23,7 @@ export function startWorkers() {
     return;
   }
 
-  const connection = redis!;
+  const connection = redisConnectionOptions!;
   const automationWorker = new Worker(
     'automation',
     async (job) => {

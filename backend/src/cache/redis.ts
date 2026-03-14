@@ -10,6 +10,15 @@ export const redis =
       })
     : null;
 
+export const redisConnectionOptions =
+  redisUrl && redisUrl.trim().length > 0
+    ? {
+        url: redisUrl,
+        maxRetriesPerRequest: 2,
+        enableReadyCheck: true
+      }
+    : null;
+
 export function hasRedis() {
   return !!redis;
 }

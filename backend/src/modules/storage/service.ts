@@ -21,11 +21,11 @@ export const storageService = {
 
     const safeName = sanitizeFilename(input.filename);
     const path = `${input.folder}/${Date.now()}-${nanoid(6)}-${safeName}`;
-    const expiresIn = input.expiresIn ?? 900;
+    const expiresIn = input.expiresIn ?? 7200;
 
     const { data, error } = await supabase.storage
       .from(input.bucket)
-      .createSignedUploadUrl(path, expiresIn, { contentType: input.contentType });
+      .createSignedUploadUrl(path, { upsert: false });
 
     if (error) throw error;
 

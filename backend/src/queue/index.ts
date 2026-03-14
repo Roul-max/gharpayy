@@ -1,7 +1,7 @@
 import { Queue } from 'bullmq';
-import { redis } from '../cache/redis.js';
+import { redisConnectionOptions } from '../cache/redis.js';
 
-const connection = redis ?? undefined;
+const connection = redisConnectionOptions ?? undefined;
 
 const defaultJobOptions = {
   attempts: Number(process.env.QUEUE_DEFAULT_ATTEMPTS ?? 5),

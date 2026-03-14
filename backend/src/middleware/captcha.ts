@@ -40,11 +40,11 @@ export async function requireCaptcha(req: Request, res: Response, next: NextFunc
     const response = await fetch('https://challenges.cloudflare.com/turnstile/v0/siteverify', {
       method: 'POST',
       headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
-      body: new URLSearchParams({
-        secret,
-        response: token,
-        remoteip: req.ip
-      })
+      body: (() => {
+        const params = new URLSearchParams({ secret, response: token });
+        if (req.ip) params.set('remoteip', req.ip);
+        return params;
+      })()
     });
     const payload = (await response.json()) as { success?: boolean; ['error-codes']?: string[]; [key: string]: unknown };
     logger.info('Captcha verification result', {
