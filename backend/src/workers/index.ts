@@ -12,7 +12,6 @@ import { withSpan } from '../observability/tracing.js';
 import { logger } from '../observability/logger.js';
 import { observeQueueFailure } from '../observability/metrics.js';
 
-const connection = redis ?? undefined;
 let booted = false;
 
 export function startWorkers() {
@@ -24,6 +23,7 @@ export function startWorkers() {
     return;
   }
 
+  const connection = redis!;
   const automationWorker = new Worker(
     'automation',
     async (job) => {

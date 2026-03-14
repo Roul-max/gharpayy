@@ -1,4 +1,4 @@
-import express from "express";
+import express, { NextFunction, Request, Response } from "express";
 import cors from "cors";
 import path from "path";
 import { fileURLToPath } from "url";
@@ -62,7 +62,7 @@ async function startServer() {
 
   app.use(
     cors({
-      origin: (origin, cb) => {
+      origin: (origin, cb: (err: Error | null, allow?: boolean) => void) => {
         if (!origin || allowedOrigins.includes(origin)) return cb(null, true);
         return cb(new Error("Origin not allowed by CORS policy"));
       },
@@ -86,7 +86,7 @@ async function startServer() {
     })
   );
   app.use(compression());
-  app.use((req, res, next) => {
+  app.use((req: Request, res: Response, next: NextFunction) => {
     req.setTimeout(Number(process.env.REQUEST_TIMEOUT_MS ?? 15000));
     res.setTimeout(Number(process.env.REQUEST_TIMEOUT_MS ?? 15000), () => {
       if (!res.headersSent) {
@@ -97,7 +97,7 @@ async function startServer() {
   });
   app.use(
     express.json({
-      verify: (req: any, _res, buf) => {
+      verify: (req: Request & { rawBody?: string }, _res: Response, buf: Buffer) => {
         req.rawBody = buf.toString("utf8");
       }
     })
@@ -108,16 +108,16 @@ async function startServer() {
   app.use(requestLogger);
 
   // API routes
-  app.get("/api/health", (req, res) => {
+  app.get("/api/health", (req: Request, res: Response) => {
     res.json({ status: "ok", request_id: (req as any).requestId ?? null });
   });
 
-  app.get("/api/metrics", async (_req, res) => {
+  app.get("/api/metrics", async (_req: Request, res: Response) => {
     const metrics = await collectRuntimeMetrics();
     res.json(metrics);
   });
 
-  app.get("/metrics", async (_req, res) => {
+  app.get("/metrics", async (_req: Request, res: Response) => {
     const metrics = await collectRuntimeMetrics();
     res.json(metrics);
   });
@@ -150,7 +150,7 @@ async function startServer() {
   } else {
     // Serve static files from dist in production
     app.use(express.static(path.join(__dirname, "../../dist")));
-    app.get("*", (req, res) => {
+    app.get("*", (_req: Request, res: Response) => {
       res.sendFile(path.join(__dirname, "../../dist/index.html"));
     });
   }

@@ -2,7 +2,7 @@ import { supabase } from '../config/supabase.js';
 import { detectDuplicateLead } from '../utils/duplicateLeadDetector.js';
 import { automationQueue, enqueueNotification } from '../queue/index.js';
 import { cacheDelete, cacheDeleteByPrefix } from '../cache/cache.js';
-import { hasDatabasePool, queryWithTrace } from '../config/db.js';
+import { hasDatabasePool, queryWithTrace, withDbClient } from '../config/db.js';
 
 const DEFAULT_PAGE_SIZE = 25;
 const MAX_PAGE_SIZE = 100;
